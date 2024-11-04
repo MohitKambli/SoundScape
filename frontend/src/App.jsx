@@ -1,11 +1,11 @@
 // src/App.jsx
 import React from 'react';
-import TrendingSongs from './components/TrendingSongs';
+import HomePage from './pages/HomePage';
 
 function App() {
   return (
     <div className="App">
-      <TrendingSongs />
+      <HomePage />
     </div>
   );
 }
