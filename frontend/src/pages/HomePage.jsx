@@ -1,4 +1,3 @@
-// src/pages/HomePage.jsx
 import React, { useState } from 'react';
 import TrendingSongs from '../components/TrendingSongs';
 import SongSearch from '../components/SongSearch';
