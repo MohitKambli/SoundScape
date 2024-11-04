@@ -1,4 +1,3 @@
-// src/components/SongSearch.jsx
 import React, { useState } from 'react';
 
 const SongSearch = () => {
@@ -8,13 +7,12 @@ const SongSearch = () => {
 
   const handleSearch = async () => {
     try {
-      // Replace with actual API request to fetch songs based on search query
       const response = await fetch(`${import.meta.env.VITE_API_URL}/search?q=${query}`);
       
       if (!response.ok) throw new Error('Error fetching search results');
       
       const data = await response.json();
-      setSearchResults(data.tracks || []);
+      setSearchResults(data.searchResults);
       setError(null);
     } catch (err) {
       setError('Failed to search songs: ' + err.message);
@@ -38,6 +36,9 @@ const SongSearch = () => {
         {searchResults.length === 0 ? <p>No results found.</p> : searchResults.map((song, index) => (
           <li key={index}>
             <strong>{song.name}</strong> by {song.artist}
+            <br />
+            Album: {song.album}
+            {song.preview_url && <audio controls src={song.preview_url} />}
           </li>
         ))}
       </ul>

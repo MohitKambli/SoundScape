@@ -34,4 +34,33 @@ const fetchTrendingSongsFromSpotify = async () => {
   return allTracks.slice(0, 30);
 };
 
-module.exports = { fetchTrendingSongsFromSpotify };
+const fetchSongsBySearchTerm = async (query) => {
+  try {
+    const token = await getAccessToken();
+    const response = await axios.get('https://api.spotify.com/v1/search', {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      params: {
+        q: query,
+        type: 'track',
+        limit: 10,
+      },
+    });
+
+    // Extract relevant data from Spotify API response
+    const songs = response.data.tracks.items.map((track) => ({
+      name: track.name,
+      artist: track.artists.map((artist) => artist.name).join(', '),
+      album: track.album.name,
+      preview_url: track.preview_url,
+    }));
+
+    return songs;
+  } catch (error) {
+    console.error('Error fetching songs from Spotify:', error);
+    throw error;
+  }
+};
+
+module.exports = { fetchTrendingSongsFromSpotify, fetchSongsBySearchTerm };

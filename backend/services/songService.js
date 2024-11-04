@@ -1,6 +1,7 @@
 const TrendingSongs = require('../models/Song');
 const { fetchTrendingSongsFromSpotify } = require('../services/spotifyService');
 const redisClient = require('../config/redisConfig');
+const { fetchSongsBySearchTerm } = require('./spotifyService');
 
 // Controller to fetch and save trending songs to the database
 const getAndSaveTrendingSongs = async (req, res) => {
@@ -31,4 +32,24 @@ const getAndSaveTrendingSongs = async (req, res) => {
   }
 };
 
-module.exports = { getAndSaveTrendingSongs };
+// Controller to search for songs from Spotify API
+const searchSongs = async (req, res) => {
+  try {
+    const query = req.query.q;
+    if (!query) {
+      return res.status(400).json({ error: 'Search query is required' });
+    }
+
+    console.log(`Searching for songs with query: ${query}`);
+
+    // Fetch search results from Spotify API
+    const searchResults = await fetchSongsBySearchTerm(query);
+
+    res.json({ searchResults });
+  } catch (error) {
+    console.error('Error searching for songs:', error);
+    res.status(500).json({ error: 'Failed to search for songs' });
+  }
+};
+
+module.exports = { getAndSaveTrendingSongs, searchSongs };

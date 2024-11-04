@@ -8,7 +8,7 @@ const TrendingSongs = () => {
   useEffect(() => {
     const fetchSongs = async () => {
       try {
-        const response = await fetch(import.meta.env.VITE_API_URL);
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/trending-songs`);
 
         if (!response.ok) {
           throw new Error('Network response was not ok');

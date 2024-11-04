@@ -8,7 +8,7 @@ const HomePage = () => {
 
   return (
     <div>
-      <h1>Music App</h1>
+      <h1>SoundScape</h1>
       <div>
         <button onClick={() => setActivePage('trending')}>Trending Songs</button>
         <button onClick={() => setActivePage('search')}>Search A Song</button>
