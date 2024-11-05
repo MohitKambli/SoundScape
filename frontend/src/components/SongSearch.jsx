@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import './SongSearch.css';
 
 const SongSearch = () => {
   const [query, setQuery] = useState('');
@@ -21,26 +22,34 @@ const SongSearch = () => {
   };
 
   return (
-    <div>
-      <h2>Search A Song</h2>
-      <input 
-        type="text" 
-        placeholder="Enter song name..." 
-        value={query} 
-        onChange={(e) => setQuery(e.target.value)} 
-      />
-      <button onClick={handleSearch}>Search</button>
+    <div className="song-search-container">
+      <div className="song-search-bar">
+        <input
+          type="text"
+          placeholder="Enter song name..."
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          className="song-search-input"
+        />
+        <button onClick={handleSearch} className="song-search-button">Search</button>
+      </div>
 
       {error && <p>{error}</p>}
-      <ul>
-        {searchResults.length === 0 ? <p>No results found.</p> : searchResults.map((song, index) => (
-          <li key={index}>
-            <strong>{song.name}</strong> by {song.artist}
-            <br />
-            Album: {song.album}
-            {song.preview_url && <audio controls src={song.preview_url} />}
-          </li>
-        ))}
+      <ul className="song-search-results">
+        {searchResults.length === 0 ? (
+          <p>No results found.</p>
+        ) : (
+          searchResults.map((song, index) => (
+            <li key={index} className="song-search-item">
+              <div className="song-search-name">{song.name}</div>
+              <div className="song-search-artist">by {song.artist}</div>
+              <div className="song-search-album">Album: {song.album}</div>
+              {song.preview_url && (
+                <audio controls src={song.preview_url} className="song-search-audio" />
+              )}
+            </li>
+          ))
+        )}
       </ul>
     </div>
   );

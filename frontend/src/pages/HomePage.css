@@ -1,0 +1,47 @@
+.homepage-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  
+  .app-title {
+    font-size: 3rem;
+    font-weight: bold;
+    color: #0077cc;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+    margin-bottom: 20px;
+  }
+  
+  .nav-links {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 30px;
+  }
+  
+  .nav-link {
+    font-size: 1.2rem;
+    color: #0077cc;
+    text-decoration: none;
+    padding: 10px 15px;
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+    transition: color 0.3s ease, border-bottom 0.3s ease;
+  }
+  
+  .nav-link:hover {
+    color: #005499;
+  }
+  
+  .nav-link.active {
+    color: #005499;
+    border-bottom: 2px solid #005499;
+  }
+  
+  .content-container {
+    width: 100%;
+  }
+  

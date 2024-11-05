@@ -1,0 +1,79 @@
+.song-search-container {
+    padding: 20px;
+    max-width: 600px;
+    margin: 0 auto;
+    font-family: Arial, sans-serif;
+  }
+  
+  .song-search-title {
+    text-align: center;
+    color: #333;
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+  }
+  
+  .song-search-bar {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  
+  .song-search-input {
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 70%;
+  }
+  
+  .song-search-button {
+    padding: 10px 15px;
+    font-size: 1rem;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .song-search-button:hover {
+    background-color: #0056b3;
+  }
+  
+  .song-search-results {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .song-search-item {
+    background-color: #f1f1f1;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .song-search-name {
+    font-weight: bold;
+    font-size: 1.2rem;
+    color: #444;
+  }
+  
+  .song-search-artist {
+    color: #777;
+    margin-top: 5px;
+    font-size: 1rem;
+  }
+  
+  .song-search-album {
+    color: #555;
+    margin-top: 3px;
+    font-size: 0.9rem;
+  }
+  
+  .song-search-audio {
+    margin-top: 10px;
+    width: 100%;
+  }
+  

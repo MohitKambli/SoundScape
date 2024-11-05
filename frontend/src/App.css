@@ -1,0 +1,25 @@
+/* Apply a soft gradient background for a polished look */
+body, .App {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #f0f4f8, #cfe0e8);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  /* Center the content and apply spacing */
+  .App {
+    width: 100%;
+    max-width: 1200px;
+    padding: 20px;
+    box-sizing: border-box;
+  }
+  
+  /* Ensure text is readable on the background */
+  h1, p {
+    color: #333;
+  }
+  

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import './TrendingSongs.css';
 
 const TrendingSongs = () => {
   const [songs, setSongs] = useState([]);
@@ -32,17 +33,19 @@ const TrendingSongs = () => {
   if (error) return <p>{error}</p>;
 
   return (
-    <div>
-      <h1>Trending Songs</h1>
-      <ul>
+    <div className="trending-songs-container">
+      <ul className="trending-songs-list">
         {songs.length === 0 ? (
           <li>No trending songs available.</li>
         ) : (
           songs.map((song, index) => (
-            <li key={index}>
-              <strong>{song.name}</strong> by {song.artist} <br />
-              Album: {song.album} <br />
-              {song.preview_url && <audio controls src={song.preview_url} />}
+            <li key={index} className="trending-song-item">
+              <div className="trending-song-name">{song.name}</div>
+              <div className="trending-song-artist">by {song.artist}</div>
+              <div className="trending-song-album">Album: {song.album}</div>
+              {song.preview_url && (
+                <audio controls src={song.preview_url} className="trending-song-audio" />
+              )}
             </li>
           ))
         )}
