@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faHeart } from '@fortawesome/free-solid-svg-icons';
 import './TrendingSongs.css';
 
 const TrendingSongs = () => {
@@ -46,6 +48,7 @@ const TrendingSongs = () => {
               {song.preview_url && (
                 <audio controls src={song.preview_url} className="trending-song-audio" />
               )}
+              <FontAwesomeIcon icon={faHeart} className="like-button" />
             </li>
           ))
         )}

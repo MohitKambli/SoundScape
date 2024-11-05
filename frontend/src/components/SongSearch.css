@@ -76,4 +76,21 @@
     margin-top: 10px;
     width: 100%;
   }
+
+  .song-item {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    position: relative;
+  }
+  
+  .like-button {
+    color: #ddd;
+    margin-left: 10px;
+    cursor: pointer;
+    transition: color 0.3s;
+  }
+  
+  .like-button:hover {
+    color: #ff4081;
+  }
   

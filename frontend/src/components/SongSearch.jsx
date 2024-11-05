@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faHeart } from '@fortawesome/free-solid-svg-icons';
 import './SongSearch.css';
 
 const SongSearch = () => {
@@ -47,6 +49,7 @@ const SongSearch = () => {
               {song.preview_url && (
                 <audio controls src={song.preview_url} className="song-search-audio" />
               )}
+              <FontAwesomeIcon icon={faHeart} className="like-button" />
             </li>
           ))
         )}
