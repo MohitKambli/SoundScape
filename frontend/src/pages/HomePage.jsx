@@ -1,10 +1,20 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import TrendingSongs from '../components/TrendingSongs';
 import SongSearch from '../components/SongSearch';
 import './HomePage.css';
 
 const HomePage = () => {
   const [activePage, setActivePage] = useState('trending');
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    // Clear the token from localStorage
+    localStorage.removeItem('token');
+    
+    // Redirect to login page
+    navigate('/');
+  };
 
   return (
     <div className="homepage-container">
@@ -23,6 +33,9 @@ const HomePage = () => {
         >
           Search A Song
         </span>
+        <button onClick={handleLogout} className="logout-button">
+          Logout
+        </button>
       </div>
 
       <div className="content-container">
