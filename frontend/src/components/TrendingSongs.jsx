@@ -10,8 +10,14 @@ const TrendingSongs = () => {
 
   useEffect(() => {
     const fetchSongs = async () => {
+      const token = localStorage.getItem('token'); // Retrieve the token from localStorage
+
       try {
-        const response = await fetch(`${import.meta.env.VITE_API_URL}/trending-songs`);
+        const response = await fetch(`${import.meta.env.VITE_SPOTIFY_API_URL}/trending-songs`, {
+          headers: {
+            'Authorization': `Bearer ${token}`, // Include token in the Authorization header
+          },
+        });
 
         if (!response.ok) {
           throw new Error('Network response was not ok');

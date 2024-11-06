@@ -9,8 +9,14 @@ const SongSearch = () => {
   const [error, setError] = useState(null);
 
   const handleSearch = async () => {
+    const token = localStorage.getItem('token'); // Retrieve the token from localStorage
+
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/search?q=${query}`);
+      const response = await fetch(`${import.meta.env.VITE_SPOTIFY_API_URL}/search?q=${query}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`, // Include token in the Authorization header
+        },
+      });
       
       if (!response.ok) throw new Error('Error fetching search results');
       
