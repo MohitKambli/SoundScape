@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import './LikedSongs.css'; // Create a CSS file for styling
+import './LikedSongs.css'; // Ensure this CSS file is styled appropriately
 
 const LikedSongs = () => {
   const [likedSongs, setLikedSongs] = useState([]);
@@ -11,19 +11,18 @@ const LikedSongs = () => {
       const token = localStorage.getItem('token'); // Retrieve the token from localStorage
 
       try {
-        const response = await fetch(`${import.meta.env.VITE_SPOTIFY_API_URL}/liked-songs`, {
+        const response = await fetch(`${import.meta.env.VITE_SONG_API_URL}/user/liked-songs`, {
           headers: {
             'Authorization': `Bearer ${token}`, // Include token in the Authorization header
           },
         });
 
         if (!response.ok) {
-          throw new Error('Network response was not ok');
+          throw new Error('Failed to fetch liked songs');
         }
 
         const data = await response.json();
-        console.log(data); // Log the fetched data for debugging
-        setLikedSongs(data.likedSongs); // Ensure this is the correct path to your data
+        setLikedSongs(data.likedSongs); // Use the correct path to your liked songs data
       } catch (err) {
         setError('Failed to fetch liked songs: ' + err.message);
         console.error(err); // Log the error for debugging

@@ -89,5 +89,29 @@ const likeSong = async (req, res) => {
   }
 };
 
+// Like a song (using MongoDB with Mongoose)
+const likedSongs = async (req, res) => {
+  const user = req.user; // Get user info from the auth middleware
 
-module.exports = { getAndSaveTrendingSongs, searchSongs, likeSong };
+  try {
+    // Check if user information is available
+    if (!user || !user._id) {
+      return res.status(400).json({ success: false, message: 'User information is missing' });
+    }
+
+    // Find the user in the database
+    const foundUser = await User.findById(user._id);
+    if (!foundUser) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+
+    // Return the liked songs
+    res.status(200).json({ success: true, likedSongs: foundUser.likedSongs });
+  } catch (err) {
+    console.error('Error fetching liked songs:', err);
+    res.status(500).json({ success: false, message: 'Failed to fetch liked songs.' });
+  }
+};
+
+
+module.exports = { getAndSaveTrendingSongs, searchSongs, likeSong, likedSongs };
