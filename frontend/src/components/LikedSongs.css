@@ -1,0 +1,35 @@
+.liked-songs-container {
+    padding: 20px;
+  }
+  
+  .liked-songs-list {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .liked-song-item {
+    margin: 15px 0;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    background-color: #f9f9f9;
+  }
+  
+  .liked-song-name {
+    font-size: 1.2em;
+    font-weight: bold;
+  }
+  
+  .liked-song-artist,
+  .liked-song-album {
+    font-size: 0.9em;
+    color: #555;
+  }
+  
+  .liked-song-audio {
+    margin-top: 10px;
+    width: 100%;
+  }
+  

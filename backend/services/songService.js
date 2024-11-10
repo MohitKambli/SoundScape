@@ -1,7 +1,8 @@
-const TrendingSongs = require('../models/Song');
+const TrendingSongs = require('../models/TrendingSongs');
 const { fetchTrendingSongsFromSpotify } = require('../services/spotifyService');
 const redisClient = require('../config/redisConfig');
 const { fetchSongsBySearchTerm } = require('./spotifyService');
+const User = require('../models/user');
 
 // Controller to fetch and save trending songs to the database
 const getAndSaveTrendingSongs = async (req, res) => {
@@ -52,4 +53,41 @@ const searchSongs = async (req, res) => {
   }
 };
 
-module.exports = { getAndSaveTrendingSongs, searchSongs };
+// Like a song (using MongoDB with Mongoose)
+const likeSong = async (req, res) => {
+  const { songName, artist, album, previewUrl } = req.body;
+  const user = req.user; // User info from auth middleware
+
+  try {
+    // Verify that req.user contains _id
+    if (!user || !user._id) {
+      return res.status(400).json({ success: false, message: 'User information is missing' });
+    }
+
+    // Find the user in the DB
+    const foundUser = await User.findById(user._id);
+
+    if (!foundUser) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+
+    // Check if song is already liked
+    if (foundUser.likedSongs.some(song => song.previewUrl === previewUrl)) {
+      return res.status(400).json({ success: false, message: 'Song already liked.' });
+    }
+
+    // Add the song to the likedSongs array
+    foundUser.likedSongs.push({ name:songName, artist, album, preview_url:previewUrl });
+
+    // Save the updated user
+    await foundUser.save();
+
+    res.status(200).json({ success: true, message: 'Song liked successfully.' });
+  } catch (err) {
+    console.error('Error while liking song:', err);
+    res.status(500).json({ success: false, message: 'Failed to like song.' });
+  }
+};
+
+
+module.exports = { getAndSaveTrendingSongs, searchSongs, likeSong };

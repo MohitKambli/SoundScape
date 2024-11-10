@@ -2,6 +2,7 @@ const express = require('express');
 const dotenv = require('dotenv');
 const spotifyRoutes = require('./routes/spotifyRoutes');
 const authRoutes = require('./routes/authRoutes');
+const songRoutes = require('./routes/songRoutes');
 const connectDB = require('./config/dbConfig');
 const cors = require('cors');
 const authenticateToken = require('./middleware/authMiddleware');
@@ -24,6 +25,9 @@ app.use('/api/auth', authRoutes);
 
 // Protected Route Example
 app.use('/api/spotify', authenticateToken, spotifyRoutes);
+
+// Integrate song routes
+app.use('/api/song', authenticateToken, songRoutes);
 
 app.get('/', (req, res) => {
   res.send('Welcome to the SoundScape!');

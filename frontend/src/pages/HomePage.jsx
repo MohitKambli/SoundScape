@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import TrendingSongs from '../components/TrendingSongs';
 import SongSearch from '../components/SongSearch';
+import LikedSongs from '../components/LikedSongs';
 import './HomePage.css';
 
 const HomePage = () => {
@@ -33,6 +34,12 @@ const HomePage = () => {
         >
           Search A Song
         </span>
+        <span 
+          className={`nav-link ${activePage === 'liked' ? 'active' : ''}`} 
+          onClick={() => setActivePage('liked')}
+        >
+          Liked Songs
+        </span>
         <button onClick={handleLogout} className="logout-button">
           Logout
         </button>
@@ -41,6 +48,7 @@ const HomePage = () => {
       <div className="content-container">
         {activePage === 'trending' && <TrendingSongs />}
         {activePage === 'search' && <SongSearch />}
+        {activePage === 'liked' && <LikedSongs />}
       </div>
     </div>
   );
