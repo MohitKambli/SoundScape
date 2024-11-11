@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeart } from '@fortawesome/free-solid-svg-icons';
 import './SongSearch.css';
@@ -9,18 +9,44 @@ const SongSearch = () => {
   const [error, setError] = useState(null);
   const [likedSongs, setLikedSongs] = useState(new Set());
 
+  // Fetch liked songs when component mounts
+  useEffect(() => {
+    const fetchLikedSongs = async () => {
+      const token = localStorage.getItem('token');
+      try {
+        const response = await fetch(`${import.meta.env.VITE_SONG_API_URL}/user/liked-songs`, {
+          headers: {
+            'Authorization': `Bearer ${token}`, 
+          },
+        });
+        
+        if (!response.ok) throw new Error('Error fetching liked songs');
+        
+        const data = await response.json();
+        // Populate likedSongs set
+        const likedSongsSet = new Set(data.likedSongs.map(song => song.preview_url));
+        setLikedSongs(likedSongsSet);
+        setError(null);
+      } catch (err) {
+        setError('Failed to fetch liked songs: ' + err.message);
+      }
+    };
+
+    fetchLikedSongs();
+  }, []); // Runs once when the component mounts
+
   const handleSearch = async () => {
-    const token = localStorage.getItem('token'); // Retrieve the token from localStorage
+    const token = localStorage.getItem('token');
 
     try {
       const response = await fetch(`${import.meta.env.VITE_SPOTIFY_API_URL}/search?q=${query}`, {
         headers: {
-          'Authorization': `Bearer ${token}`, // Include token in the Authorization header
+          'Authorization': `Bearer ${token}`,
         },
       });
-      
+
       if (!response.ok) throw new Error('Error fetching search results');
-      
+
       const data = await response.json();
       setSearchResults(data.searchResults);
       setError(null);
@@ -31,44 +57,36 @@ const SongSearch = () => {
   };
 
   const handleLike = async (song) => {
-    // Toggle the liked state locally
-    setLikedSongs((prev) => {
-      const newLikedSongs = new Set(prev);
-      if (newLikedSongs.has(song.name)) {
-        newLikedSongs.delete(song.name);
-      } else {
-        newLikedSongs.add(song.name);
-      }
-      return newLikedSongs;
-    });
-  
-    // Make a backend call to update the user's liked songs
+    const isLiked = likedSongs.has(song.preview_url);
+    const updatedLikedSongs = new Set(likedSongs);
+
+    if (isLiked) {
+      updatedLikedSongs.delete(song.preview_url);
+    } else {
+      updatedLikedSongs.add(song.preview_url);
+    }
+    setLikedSongs(updatedLikedSongs);
+
     try {
-      const token = localStorage.getItem('token'); // Retrieve the token from localStorage
-      const response = await fetch(`${import.meta.env.VITE_SONG_API_URL}/user/like-song`, {
+      const token = localStorage.getItem('token');
+      await fetch(`${import.meta.env.VITE_SONG_API_URL}/user/like-song`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          songName: song.name,   // Include song name
-          artist: song.artist,   // Include artist name
-          album: song.album,     // Include album name
-          previewUrl: song.preview_url,  // Include preview URL
+          songName: song.name,
+          artist: song.artist,
+          album: song.album,
+          previewUrl: song.preview_url,
+          liked: !isLiked,  // Send `liked` flag to indicate the action (like/unlike)
         }),
       });
-  
-      if (!response.ok) {
-        throw new Error('Failed to update liked song');
-      }
-      const data = await response.json();
-      if (!data.success) {
-        throw new Error('Failed to update liked song');
-      }
-      console.log('Song liked successfully');
     } catch (err) {
-      console.error('Error while liking the song:', err.message);
+      console.error('Error updating like status:', err.message);
+      // Revert the state update in case of an error
+      setLikedSongs(isLiked ? updatedLikedSongs.add(song.preview_url) : updatedLikedSongs.delete(song.preview_url));
     }
   };
 
@@ -100,8 +118,8 @@ const SongSearch = () => {
               )}
               <FontAwesomeIcon
                 icon={faHeart}
-                className={`like-button ${likedSongs.has(song.name) ? 'liked' : ''}`}
-                onClick={() => handleLike(song)} // Pass the full song object
+                className={`like-button ${likedSongs.has(song.preview_url) ? 'liked' : ''}`}
+                onClick={() => handleLike(song)}
               />
             </li>
           ))
