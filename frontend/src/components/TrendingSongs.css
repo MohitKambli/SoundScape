@@ -64,3 +64,7 @@
   .like-button:hover {
     color: #ff4081;
   }
+
+  .like-button.liked {
+    color: #ff4081; /* Color when liked */
+  }

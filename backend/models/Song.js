@@ -6,6 +6,7 @@ const songSchema  = new mongoose.Schema({
   artist: { type: String, required: true },
   album: { type: String, required: true },
   preview_url: { type: String, required: true },
+  likedBy: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }]
 });
 
 const Song = mongoose.models.Song || mongoose.model('Song', songSchema );

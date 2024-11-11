@@ -10,73 +10,79 @@ const TrendingSongs = () => {
   const [likedSongs, setLikedSongs] = useState(new Set());
 
   useEffect(() => {
-    const fetchSongs = async () => {
+    const fetchSongsAndLikedSongs = async () => {
       const token = localStorage.getItem('token'); // Retrieve the token from localStorage
-      console.log(token);
       try {
-        const response = await fetch(`${import.meta.env.VITE_SPOTIFY_API_URL}/trending-songs`, {
+        // Fetch trending songs
+        const songsResponse = await fetch(`${import.meta.env.VITE_SPOTIFY_API_URL}/trending-songs`, {
           headers: {
-            'Authorization': `Bearer ${token}`, // Include token in the Authorization header
+            'Authorization': `Bearer ${token}`,
           },
         });
 
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
+        if (!songsResponse.ok) {
+          throw new Error('Failed to fetch trending songs');
         }
 
-        const data = await response.json();
-        console.log(data); // Log the fetched data for debugging
-        setSongs(data.trendingSongs); // Ensure this is the correct path to your data
+        const songsData = await songsResponse.json();
+        setSongs(songsData.trendingSongs);
+
+        // Fetch user's liked songs
+        const likedSongsResponse = await fetch(`${import.meta.env.VITE_SONG_API_URL}/user/liked-songs`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+          },
+        });
+
+        if (!likedSongsResponse.ok) {
+          throw new Error('Failed to fetch liked songs');
+        }
+
+        const likedSongsData = await likedSongsResponse.json();
+        // Assume likedSongsData is an array of preview URLs of liked songs
+        setLikedSongs(new Set(likedSongsData.likedSongs.map(song => song.preview_url)));
       } catch (err) {
-        setError('Failed to fetch trending songs: ' + err.message);
-        console.error(err); // Log the error for debugging
+        setError('Error fetching data: ' + err.message);
+        console.error(err);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchSongs();
+    fetchSongsAndLikedSongs();
   }, []);
 
   const handleLike = async (song) => {
-    // Toggle the liked state locally
-    setLikedSongs((prev) => {
-      const newLikedSongs = new Set(prev);
-      if (newLikedSongs.has(song.preview_url)) {
-        newLikedSongs.delete(song.preview_url);
-      } else {
-        newLikedSongs.add(song.preview_url);
-      }
-      return newLikedSongs;
-    });
+    const isLiked = likedSongs.has(song.preview_url);
+    const updatedLikedSongs = new Set(likedSongs);
+    
+    if (isLiked) {
+      updatedLikedSongs.delete(song.preview_url);
+    } else {
+      updatedLikedSongs.add(song.preview_url);
+    }
+    setLikedSongs(updatedLikedSongs);
 
-    // Make a backend call to update the user's liked songs with the full song details
     try {
       const token = localStorage.getItem('token'); // Retrieve the token from localStorage
-      const response = await fetch(`${import.meta.env.VITE_SONG_API_URL}/user/like-song`, {
+      await fetch(`${import.meta.env.VITE_SONG_API_URL}/user/like-song`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          songName: song.name,   // Include song name
-          artist: song.artist,   // Include artist name
-          album: song.album,     // Include album name
-          previewUrl: song.preview_url,  // Include preview URL
+          songName: song.name,
+          artist: song.artist,
+          album: song.album,
+          previewUrl: song.preview_url,
+          liked: !isLiked,  // Send `liked` flag to indicate the action (like/unlike)
         }),
       });
-
-      if (!response.ok) {
-        throw new Error('Failed to update liked song');
-      }
-      const data = await response.json();
-      if (!data.success) {
-        throw new Error('Failed to update liked song');
-      }
-      console.log('Song liked successfully');
     } catch (err) {
-      console.error('Error while liking the song:', err.message);
+      console.error('Error updating like status:', err.message);
+      // Revert the state update in case of an error
+      setLikedSongs(isLiked ? updatedLikedSongs.add(song.preview_url) : updatedLikedSongs.delete(song.preview_url));
     }
   };
 
